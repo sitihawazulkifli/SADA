@@ -1,0 +1,222 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>SADA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/sweetalert.css" rel="stylesheet">    
+    <link href="css/style.css" rel="stylesheet">
+    <link href="color/default.css" rel="stylesheet">
+    <link rel="shortcut icon" href="img/favicon.ico">
+</head>
+
+<style>
+    .navbar-inverse .navbar-inner {
+        padding: 0px;
+        background-image: linear-gradient(to bottom, #33BBFF, #33BBFF);
+        border-color: #33BBFF;
+    }
+
+    footer {
+        background: BFF#33BBFF;
+    }
+</style>
+
+<body>
+    <!-- navbar -->
+    <div class="navbar-wrapper">
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- Responsive navbar -->
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <h1 class="brand">
+                        <a href="index.html">SADA</a>
+                    </h1>
+
+                    <!-- navigation -->
+                    <nav class="pull-right nav-collapse collapse">
+                        <ul id="menu-main" class="nav">
+                            <li>
+                                <a title="home" href="index.html">Home</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Header area -->
+    <div class="container">
+        <header class="clearfix">
+            <div class="container">
+                <div class="aligncenter">
+                    <h4>
+                        <E-Aduan></E-Aduan>
+                    </h4>
+                </div>
+                <div class="row">
+                    <div class="span12">
+                        <div class="cform" id="contact-form">
+                            <form id="usersForm" class="contactForm">
+                                <div class="row">
+                                    <div class="span6">
+                                        <div class="field your-name form-group">
+                                            <input type="text" class="form-control" id="DateOfComplaint" placeholder="Date Of Complaint">
+                                        </div>
+                                        <div class="field your-name form-group">
+                                            <input type="text" name="Address" class="form-control" id="Address" placeholder="Address">
+                                        </div>
+                                        <div class="field your-name form-group">
+                                            <input type="text" class="form-control" id="CustomerAccount" placeholder="CustomerAccount" readonly>
+                                        </div>
+                                        <select name="TypeOfComplaint" id="TypeOfComplaint">
+                                            <option value="volvo"> Air Kotor</option>
+                                            <option value="saab">Hydrant Rosak</option>
+                                            <option value="fiat">Jalan Yang Dikorek Tidak Diturap Semula</option>
+                                            <option value="Kecurian Air">Kecurian Air </option>
+                                            <option value="Kecurian Air">Kecurian Meter </option>
+                                            <option value="Kecurian Air">Paip Pecah </option>
+                                            <option value="Kecurian Air">Paip Pecah Semula </option>
+                                            <option value="Kecurian Air">Tangki Bocor </option>
+                                            <option value="Kecurian Air">Tiada Tekanan Air/ Tekanan Rendah</option>
+                                            <option value="Kecurian Air">Valve Bocor </option>
+                                            <option value="Kecurian Air">Lain-Lain (Sila Nyatakan) </option>
+                                        </select>
+                                        <select name id="Daerah">
+                                            <option value="volvo"> Bandar Baru</option>
+                                            <option value="saab">Baling</option>
+                                            <option value="fiat">Kota Setar</option>
+                                            <option value="Kecurian Air">Kuala Muda </option>
+                                            <option value="Kecurian Air">Kubang Pasu </option>
+                                            <option value="Kecurian Air">Kulim </option>
+                                            <option value="Kecurian Air">Langkawi </option>
+                                            <option value="Kecurian Air">Padang Terap </option>
+                                            <option value="Kecurian Air">Pendang</option>
+                                            <option value="Kecurian Air">Sik</option>
+                                            <option value="Kecurian Air">Yan </option>
+                                        </select>
+                                        <div class="cform" id="contact-form">
+                                            <form id="usersForm" class="contactForm">
+                                                <div class="row">
+                                                    <div class="span6">
+                                                        <div class="field your-name form-group">
+                                                            <input type="text" class="form-control" id="Description" placeholder="Description">
+                                                        </div>
+                                                    </div>
+                                                    <div class="span6">
+                                                        <input type="submit" value="Submit" class="btn btn-theme pull-left">
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="span6">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </div>
+
+    </header>
+    <footer class="down">
+        <div class="container">
+            <div class="span6 offset3">
+                <p class="copyright">
+                    &copy; SADA. All rights reserved.
+                </p>
+            </div>
+        </div>
+        <!-- ./container -->
+    </footer>
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase.js"></script>
+    <script src="js/sweetalert.min.js"></script>
+    
+
+    <script>
+        // Initialize Firebase
+    </script>
+
+    <script>
+        $(document).ready(function () {
+
+            var config = {
+                apiKey: "AIzaSyBeKb0QWW6qoSa_sJz6Dbluldmrauhqda8",
+                authDomain: "sada-2d4af.firebaseapp.com",
+                databaseURL: "https://sada-2d4af.firebaseio.com"
+
+            };
+            firebase.initializeApp(config);
+
+            var db = firebase.database();
+
+            $("#CustomerAccount").val(localStorage.getItem("CustomerAccount"));
+            var id = $("#CustomerAccount").val();
+
+            var usersForm = document.getElementById("usersForm");
+            var DateOfComplaint = document.getElementById("DateOfComplaint");
+            var Address = document.getElementById("Address");
+            var CustomerAccount = document.getElementById("CustomerAccount")
+            var selTypeOfComplaint = document.getElementById("TypeOfComplaint");
+            var selDaerah = document.getElementById("Daerah");
+            var selDescription = document.getElementById("Description");
+
+            usersForm.addEventListener('submit', (e) => {
+
+                e.preventDefault();
+                var id = CustomerAccount.value;
+
+                db.ref('complaint/' + id).set({
+
+                    DateOfComplaint: DateOfComplaint.value,
+                    Address: Address.value,
+                    CustomerAccount: CustomerAccount.value,
+                    TypeOfComplaint: selTypeOfComplaint.options[selTypeOfComplaint.selectedIndex]
+                        .text,
+                    Daerah: selDaerah.options[Daerah.selectedIndex].text,
+                    Description: selDescription.value,
+                }, function (error) {
+                    if (error) {
+                        swal("eAduan failed",
+                            "Please check your internet connection.",
+                            "error");
+                    } else {
+
+                        DateOfComplaint.value = '';
+                        Address.value = '';
+                        selTypeOfComplaint.selectedIndex = 0;
+                        selDaerah.selectedIndex = 0;
+
+                        swal({
+                            title: "eAduan successful",
+                            text: "eAduan is now completed.",
+                            type: "success"
+                        });
+                    }
+                });
+
+
+
+            });
+        });
+    </script>
+</body>
+
+</html>
+</body>
+
+</html>

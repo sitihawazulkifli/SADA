@@ -1,0 +1,163 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>SADA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/sweetalert.css" rel="stylesheet">
+    <link href="css/nprogress.min.css" rel="stylesheet">
+    <link href="color/default.css" rel="stylesheet">
+    <link rel="shortcut icon" href="img/favicon.ico">
+</head>
+<style>
+    .down {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+    }
+
+    .navbar-inverse .navbar-inner {
+        padding: 0px;
+        background-image: linear-gradient(to bottom, #33BBFF, #33BBFF);
+        border-color: #3BB9FF;
+    }
+
+    footer {
+        background: #33AFFF;
+    }
+</style>
+
+<body>
+    <!-- navbar -->
+    <div class="navbar-wrapper">
+        <div class="navbar navbar-inverse navbar-fixed-top" style="margin-bottom: 5px !important;">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- Responsive navbar -->
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <h1 class="brand">
+                        <a href="login.html">SADA</a>
+                    </h1>
+
+                    <!-- navigation -->
+                    <nav class="pull-right nav-collapse collapse">
+                        <ul id="menu-main" class="nav">
+                            <li>
+                                <a title="works" href="currentwaterbills.html">Current Water Bills</a>
+                            </li>
+                            <li>
+                                <a title="contact" href="eaduan.html">E-Aduan</a>
+                            </li>
+                            <li>
+                                <a title="contact" href="Main.html">Main</a>
+                            </li>
+                            <li>
+                                <a id="btnTopup" href="topup.html">Topup E-Wallet</a>
+                            </li>
+                            <li>
+                                <a id="btnLogout" title="logout">Logout</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Header area -->
+    <div class="container">
+        <header class="clearfix">
+            <div class="container">
+                <div class="row" id="rowLabel" style="padding-top: 5px;">
+                </div>
+                <div class="row">
+                    <div class="span6" style="padding-bottom: 10px;padding-top: 10px;">
+                        <div class="home-post">
+                            <div class="post-image">
+                                <img class="max-img" src="img/myaccount.jpg" alt="">
+                            </div>
+                            <a href="customer_details.html">
+                                <div class="post-meta" style=" padding: 10px; ">
+                                    <i class="icon-user icon-2x"></i>
+                                    <span class="date">Customer Details</span>
+                                </div>
+                            </a>
+
+                        </div>
+
+        </header>
+        </div>
+        <footer class="down">
+            <div class="container">
+                <div class="span6 offset3">
+                    <p class="copyright">
+                        &copy; SADA. All rights reserved.
+                    </p>
+                </div>
+            </div>
+            <!-- ./container -->
+        </footer>
+
+
+        <script src="js/jquery.js"></script>
+        <script src="js/bootstrap.js"></script>
+        <script src="js/firebase.js"></script>
+        <script src="js/sweetalert.min.js"></script>
+        <script src="js/nprogress.min.js"></script>
+
+        <script>
+            $(document).ready(function () {
+
+                var config = {
+                    apiKey: "AIzaSyBeKb0QWW6qoSa_sJz6Dbluldmrauhqda8",
+                    authDomain: "sada-2d4af.firebaseapp.com",
+                    databaseURL: "https://sada-2d4af.firebaseio.com"
+                };
+
+                firebase.initializeApp(config);
+
+                var db = firebase.database();
+                var CustomerAccount = localStorage.getItem("CustomerAccount");
+                if (CustomerAccount.length > 0) {
+                    NProgress.start();
+                    db.ref('/users/' + CustomerAccount).once("value", function (snapshot) {
+                        var userArr = snapshot.val();
+                        var text = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>";
+                        text = text + "Welcome " + userArr.CustomerName + "!";
+                        text = text + "</strong></div>";
+                        $("#rowLabel").html(text);
+                        NProgress.done();
+                    });
+                }
+
+                $("#btnLogout").click(function () {
+
+                    swal({
+                            title: "Are you sure you want to log out?",
+                            text: "You have to login again after this.",
+                            type: "info",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Yes",
+                            closeOnConfirm: false
+                        },
+                        function () {
+                            localStorage.removeItem("CustomerAccount");
+                            window.location = "index.html";
+                        });
+                });
+
+            });
+        </script>
+</body>
+
+</html>

@@ -1,0 +1,271 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>SADA - Kedah Darul Aman</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="color/default.css" rel="stylesheet">
+    <link href="css/sweetalert.css" rel="stylesheet">
+    <link href="css/nprogress.min.css" rel="stylesheet">
+    <link rel="shortcut icon" href="img/favicon.ico">
+</head>
+
+<style>
+    .navbar-inverse .navbar-inner {
+        padding: 0px;
+        background-image: linear-gradient(to bottom, #33BBFF, #33BBFF);
+        border-color: #33BBFF;
+    }
+
+    footer {
+        background: #33BBFF;
+    }
+</style>
+
+<body>
+    <!-- navbar -->
+    <div class="navbar-wrapper">
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- Responsive navbar -->
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <h1 class="brand">
+                        <a href="index.html">SADA</a>
+                    </h1>
+
+                    <!-- navigation -->
+                    <nav class="pull-right nav-collapse collapse">
+                        <ul id="menu-main" class="nav">
+                            <li>
+                                <a title="home" href="index.html">Home</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Header area -->
+    <div class="container">
+        <header class="clearfix">
+            <div class="container">
+                <div class="aligncenter">
+                    <h4>Sign Up</h4>
+                </div>
+                <div class="row">
+                    <div class="span12">
+                        <div class="cform" id="contact-form">
+                            <form id="usersForm" class="contactForm">
+                                <div class="row">
+                                    <div class="span6">
+                                        <div class="field your-name form-group">
+                                            <input type="text" class="form-control" id="CustomerAccount" placeholder="Customer Account">
+                                        </div>
+                                        <div class="field your-name form-group">
+                                            <input type="text" name="Customer Name" class="form-control" id="CustomerName" placeholder="Customer Name">
+                                        </div>
+                                        <div class="field your-name form-group">
+                                            <input type="text" name="Phone Number" class="form-control" id="PhoneNumber" placeholder="Phone Number">
+                                        </div>
+                                        <div class="field your-password form-group">
+                                        </div>
+                                        <div class="field your-name form-group">
+                                            <input type="text" name="Customer Email" class="form-control" id="CustomerEmail" placeholder="Customer Email">
+                                        </div>
+                                        <div class="field your-name form-group">
+                                            <input type="password" name="Password" class="form-control" id="Password" placeholder="Password">
+                                        </div>
+                                    </div>
+                                    <div class="span6">
+                                        <input type="submit" value="Sign Up" class="btn btn-theme pull-left">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="span6 offset3">
+                <p class="copyright">
+                    &copy; SADA. All rights reserved.
+                </p>
+            </div>
+        </div>
+        <!-- ./container -->
+    </footer>
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/sweetalert.min.js"></script>
+    <script src="js/nprogress.min.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase.js"></script>
+    <script>
+        // Initialize Firebase
+    </script>
+
+    <script>
+        var errorText = '';
+        $(document).ready(function () {
+
+            var config = {
+                apiKey: "AIzaSyBeKb0QWW6qoSa_sJz6Dbluldmrauhqda8",
+                authDomain: "sada-2d4af.firebaseapp.com",
+                databaseURL: "https://sada-2d4af.firebaseio.com"
+
+            };
+            firebase.initializeApp(config);
+
+            var db = firebase.database();
+
+            var usersForm = document.getElementById("usersForm");
+            var CustomerAccount = document.getElementById("CustomerAccount");
+            var CustomerName = document.getElementById("CustomerName");
+            var PhoneNumber = document.getElementById("PhoneNumber");
+            var CustomerEmail = document.getElementById("CustomerEmail");
+            var Password = document.getElementById("Password");
+
+            usersForm.addEventListener('submit', (e) => {
+
+                e.preventDefault();
+                var id = CustomerAccount.value;
+
+                var counter = 0;
+                var isCorrect = false;
+                errorText = '';
+
+                if ($('#CustomerAccount').val().trim().length < 1) {
+                    errorText += '• Customer Account.\n';
+                    counter++;
+                }
+
+                if ($('#CustomerName').val().trim().length < 1) {
+                    errorText += '• Customer Name.\n';
+                    counter++;
+                }
+
+                var icno = $('#PhoneNumber').val().trim();
+                if (icno.length < 1) {
+                    errorText += '• Phone Number.\n';
+                    counter++;
+                }
+
+                if ($('#CustomerEmail').val().trim().length < 1) {
+                    errorText += '• Customer Email.\n';
+                    counter++;
+                }
+
+                var password = $('#Password').val().trim();
+                if (password < 1) {
+                    errorText += '• Password.\n';
+                    counter++;
+                }
+
+                if (counter == 0) {
+                    isCorrect = true;
+                }
+
+                if (isCorrect == true) {
+                    db.ref('users/' + id).set({
+                        CustomerAccount: CustomerAccount.value,
+                        CustomerName: CustomerName.value,
+                        PhoneNumber: PhoneNumber.value,
+                        CustomerEmail: CustomerEmail.value,
+                        Password: Password.value,
+                        access: 2,
+                        walbalance: 0
+                    }, function (error) {
+                        if (error) {
+                            swal("Registration failed",
+                                "Please check your internet connection.",
+                                "error");
+                        } else {
+                            localStorage.setItem("CustomerAccount", CustomerAccount.value);
+
+                            CustomerAccount.value = '';
+                            CustomerName.value = '';
+                            PhoneNumber.value = '';
+                            CustomerEmail.value = '';
+                            Password.value = '';
+
+                            swal({
+                                title: "Registration successful",
+                                text: "Your account have been registered. Application will now navigate to Main page.",
+                                type: "success",
+                            }, function () {
+                                setTimeout(function () {
+                                    window.location.href = 'Main.html';
+                                }, 2000);
+                            });
+                        }
+                    });
+
+                } else {
+                    swal("Wait a second.", "Please key in the field/s correctly below:\n\n" + errorText,
+                        "warning");
+                }
+
+            });
+        });
+
+        function checkField() {
+
+            var counter = 0;
+            var isCorrect = false;
+            errorText = '';
+
+            if ($('#CustomerAccount').val().trim().length < 1) {
+                errorText += '• Customer Account.\n';
+                counter++;
+            }
+
+            if ($('#CustomerName').val().trim().length < 1) {
+                errorText += '• Customer Name.\n';
+                counter++;
+            }
+
+            var icno = $('#PhoneNumber').val().trim();
+            if (icno.length < 0) {
+                errorText += '• Phone Number.\n';
+                counter++;
+            } else {
+
+
+            }
+
+            if ($('#CustomerEmail').val().trim().length < 1) {
+                errorText += '• Customer Email.\n';
+                counter++;
+            }
+
+            var password = $('#Password').val().trim();
+            if (password < 0) {
+                errorText += '• Password.\n';
+                counter++;
+            }
+
+            if (counter == 0) {
+                isCorrect = true;
+            }
+
+            return isCorrect;
+        };
+    </script>
+</body>
+
+
+</html>

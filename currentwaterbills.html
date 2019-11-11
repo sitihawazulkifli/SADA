@@ -1,0 +1,311 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>SADA - Current Water Bills</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/sweetalert.css" rel="stylesheet">
+    <link href="css/nprogress.min.css" rel="stylesheet">
+    <link href="color/default.css" rel="stylesheet">
+    <link rel="shortcut icon" href="img/favicon.ico">
+</head>
+
+<style>
+    .down {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+    }
+
+    .navbar-inverse .navbar-inner {
+        padding: 0px;
+        background-image: linear-gradient(to bottom, #33BBFF, #33BBFF);
+        border-color: #33BBFF;
+    }
+
+    footer {
+        background: #33BBFF;
+    }
+</style>
+
+<body>
+    <!-- navbar -->
+    <div class="navbar-wrapper">
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- Responsive navbar -->
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <h1 class="brand">
+                        <a href="index.html">SADA</a>
+                    </h1>
+
+                    <!-- navigation -->
+                    <nav class="pull-right nav-collapse collapse">
+                        <ul id="menu-main" class="nav">
+                            <li>
+                                <a title="home" href="main.html">Home</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Header area -->
+    <div class="container">
+        <header class="clearfix">
+            <div class="container">
+                <div class="aligncenter">
+                    <h4>Current Water Bills</h4>
+                </div>
+                <div class="row">
+                    <div class="span12">
+                        <div class="cform" id="contact-form">
+                            <div class="row">
+                                <div class="field your-name form-group">
+                                    <input type="text" name="Year" class="form-control" id="custAccountNumber" placeholder="Customer Account Number" readonly>
+                                </div>
+                                <div class="field your-name form-group">
+                                    <input type="text" name="Year" class="form-control" id="Year" placeholder="Year">
+                                </div>
+                                <div class="field form-group">
+                                    <div class="form-group">
+                                        <select class="form-control" id="selMonth">
+                                            <option>Select Month</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                            <option>5</option>
+                                            <option>6</option>
+                                            <option>7</option>
+                                            <option>8</option>
+                                            <option>9</option>
+                                            <option>10</option>
+                                            <option>11</option>
+                                            <option>12</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="field your-name form-group">
+                                    <input type="text" name="Current Water Volume" class="form-control" id="CurrentWaterVolume" placeholder="Current Water volume">
+                                </div>
+                                <div class="field your-name form-group">
+                                    <input type="text" class="form-control" id="PreviousWaterVolume" placeholder="Previous Water Volume">
+                                </div>
+                                <div class="field your-name form-group">
+                                    <input type="text" name="Total" class="form-control" id="Total" placeholder="Total" readonly>
+                                </div>
+                                <div class="span6">
+                                    <input type="button" id="btnCalculate" value="Calculate" class="btn btn-theme" style="width:49%;">
+                                    <input type="button" id="btnSubmit" value="Pay" class="btn btn-theme" style="width:49%;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="span6 offset3">
+                <p class="copyright">
+                    &copy; SADA. All rights reserved.
+                </p>
+            </div>
+        </div>
+        <!-- ./container -->
+    </footer>
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/sweetalert.min.js"></script>
+    <script src="js/nprogress.min.js"></script>
+
+
+    <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase.js"></script>
+
+    <script>
+        var errorText = '';
+
+        $(document).ready(function () {
+
+            var config = {
+                apiKey: "AIzaSyBeKb0QWW6qoSa_sJz6Dbluldmrauhqda8",
+                authDomain: "sada-2d4af.firebaseapp.com",
+                databaseURL: "https://sada-2d4af.firebaseio.com"
+            };
+            firebase.initializeApp(config);
+
+            var db = firebase.database();
+
+            var PreviousWaterVolume = document.getElementById("PreviousWaterVolume");
+            var CurrentWaterVolume = document.getElementById("CurrentWaterVolume");
+            var custAccountNumber = document.getElementById("custAccountNumber");
+            var selMonth = document.getElementById("selMonth");
+            var Year = document.getElementById("Year");
+            var Total = document.getElementById("Total");
+
+            var total = 6.00;
+            $("#custAccountNumber").val(localStorage.getItem("CustomerAccount"));
+            var id = $("#custAccountNumber").val();
+
+            $("#btnCalculate").click(function () {
+                if (checkField() == true) {
+
+                    var previousWaterVolume = Number($('#PreviousWaterVolume').val().trim());
+                    var currWaterVolume = Number($('#CurrentWaterVolume').val().trim());
+
+                    var diff = currWaterVolume - previousWaterVolume;
+
+                    if (diff <= 20) {
+                        total = diff * 0.5;
+                    } else if (diff <= 35) {
+                        total = ((diff - 20) * 0.9) + (20 * 0.5);
+                    } else {
+                        total = ((diff - 35) * 1.42) + (15 * 0.9) + (20 * 0.5);
+                    }
+
+                    total += 6.0;
+
+                    total = total.toFixed(2);
+
+                    $('#Total').val(total);
+                    
+                } else {
+                    swal("Wait a second.", "Please key in the field/s correctly below:\n\n" + errorText,
+                        "warning");
+                }
+            });
+
+            $("#btnSubmit").click(function () {
+                db.ref('/users/' + id).once("value", function (snapshot) {
+                    if (snapshot.val() !== null) {
+                        var userArr = snapshot.val();
+                        if (userArr.walbalance >= total) {
+
+                            var balance = userArr.walbalance - total;
+
+                            db.ref('payment/' + id).set({
+                                previousWaterVolume: previousWaterVolume,
+                                currWaterVolume: currWaterVolume,
+                                total: total,
+                                custAccountNumber: id,
+                                month: selMonth.options[selMonth.selectedIndex].text,
+                                Year: Year.value
+                            }, function (error) {
+                                if (error) {
+                                    swal("Payment failed",
+                                        "Please check your internet connection.",
+                                        "error");
+                                } else {
+
+                                    PreviousWaterVolume.value = '';
+                                    CurrentWaterVolume.value = '';
+                                    custAccountNumber.value = '';
+                                    Year.value = '';
+                                    Total.value = '';
+
+                                    selMonth.selectedIndex = 0;
+
+                                    swal({
+                                        title: "Payment successful",
+                                        text: "Payment is now completed. Your e-wallet balance is RM " +
+                                            balance.toFixed(2),
+                                        type: "success",
+                                    }, function () {
+                                        db.ref().child(
+                                                '/users/' + id)
+                                            .update({
+                                                walbalance: balance.toFixed(
+                                                    2)
+                                            });
+                                    });
+                                }
+                            });
+
+                        } else {
+                            swal("Oops!",
+                                "E Wallet is not sufficient. Please top up your e-wallet",
+                                "warning");
+                        }
+                    } else {
+                        swal("Oops!",
+                            "Customer Account number does not exist.",
+                            "warning");
+                    }
+                });
+            });
+
+        });
+
+        function checkField() {
+
+            var counter = 0;
+            var isCorrect = false;
+            errorText = '';
+
+            var previousWaterVolume = $('#PreviousWaterVolume').val().trim();
+            if (previousWaterVolume.length < 1) {
+                errorText += '• Previous Water Volume.\n';
+                counter++;
+            } else {
+                if (/^\d+$/.test(previousWaterVolume) == false) {
+                    errorText += '• Previous Water Volume format is not correct.\n';
+                    counter++;
+                }
+            }
+
+            var currWaterVolume = $('#CurrentWaterVolume').val().trim();
+            if (currWaterVolume.length < 1) {
+                errorText += '• Current Water Volume.\n';
+                counter++;
+            } else {
+                if (/^\d+$/.test(currWaterVolume) == false) {
+                    errorText += '• Current Water Volume format is not correct.\n';
+                    counter++;
+                }
+            }
+
+
+            var Year = $('#Year').val().trim();
+            if (Year.length < 1) {
+                errorText += '• Year.\n';
+                counter++;
+            } else {
+                if (/^\d+$/.test(Year) == false) {
+                    errorText += '• Year format is not correct.\n';
+                    counter++;
+                }
+            }
+
+            previousWaterVolume = Number(previousWaterVolume);
+            currWaterVolume = Number(currWaterVolume);
+
+            if (currWaterVolume < previousWaterVolume) {
+                errorText += '• Current Water Volume is smaller than Previous Water Volume.\n';
+                counter++;
+            }
+
+            if (counter == 0) {
+                isCorrect = true;
+            }
+
+            return isCorrect;
+        }
+    </script>
+</body>
+
+</html>

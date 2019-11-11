@@ -1,0 +1,273 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>SADA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/sweetalert.css" rel="stylesheet">
+    <link href="css/nprogress.min.css" rel="stylesheet">
+    <link href="color/default.css" rel="stylesheet">
+    <link rel="shortcut icon" href="img/favicon.ico">
+</head>
+<style>
+    .down {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+    }
+
+    .navbar-inverse .navbar-inner {
+        padding: 0px;
+        background-image: linear-gradient(to bottom, #33BBFF, #33BBFF);
+        border-color: #3BB9FF;
+    }
+
+    footer {
+        background: #33AFFF;
+    }
+</style>
+
+<body>
+    <!-- navbar -->
+    <div class="navbar-wrapper">
+        <div class="navbar navbar-inverse navbar-fixed-top" style="margin-bottom: 5px !important;">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- Responsive navbar -->
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <h1 class="brand">
+                        <a href="login.html">SADA</a>
+                    </h1>
+
+                    <!-- navigation -->
+                    <nav class="pull-right nav-collapse collapse">
+                        <ul id="menu-main" class="nav">
+                            <li>
+                                <a id="btnHome" href="Main.html">Home</a>
+                            </li>
+                            <li>
+                                <a id="btnLogout" title="logout">Logout</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Header area -->
+    <header class="clearfix">
+        <div class="container">
+            <div class="aligncenter">
+                <h4>Topup E-Wallet</h4>
+            </div>
+            <div class="row">
+                <div class="span6">
+                    <div class="row">
+                        <div class="card-wrapper"></div>
+                    </div>
+                    <form id="form_cc">
+                        <div class="form-group span12">
+                            <input type="text" name="number" class="form-control" id="numberCC" placeholder="xxxx xxxx xxxx xxxx" style="height: 30px;">
+                        </div>
+                        <div class="form-group span12">
+                            <input type="text" name="name" class="form-control" id="nameCC" placeholder="Nor Ali" style="height: 30px;">
+                        </div>
+                        <div class="form-group span12">
+                            <input type="text" name="expiry" class="form-control" id="expiryCC" placeholder="MM/YYYY" style="height: 30px;">
+                        </div>
+                        <div class="form-group span12">
+                            <input type="text" name="cvc" class="form-control" id="cvcCC" placeholder="CVC" style="height: 30px;">
+                        </div>
+                        <div class="form-group span12">
+                            <input type="text" class="form-control" id="custAccNoCC" placeholder="Customer Account Number" style="height: 30px;" readonly>
+                        </div>
+                        <div class="form-group span12">
+                            <input type="text" class="form-control" id="amount" placeholder="Amount(RM)" style="height: 30px;">
+                        </div>
+                        <div class="span6">
+                            <input type="button" id="btnTopup" value="Top Up" class="btn btn-theme" style="width:100%;">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <footer>
+        <div class="container">
+            <div class="span6 offset3">
+                <p class="copyright">
+                    &copy; SADA. All rights reserved.
+                </p>
+            </div>
+        </div>
+        <!-- ./container -->
+    </footer>
+
+
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/firebase.js"></script>
+    <script src="js/sweetalert.min.js"></script>
+    <script src="js/nprogress.min.js"></script>
+    <script src="js/jquery.card.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $("#custAccNoCC").val(localStorage.getItem("CustomerAccount"));
+
+            var config = {
+                apiKey: "AIzaSyBeKb0QWW6qoSa_sJz6Dbluldmrauhqda8",
+                authDomain: "sada-2d4af.firebaseapp.com",
+                databaseURL: "https://sada-2d4af.firebaseio.com"
+            };
+            firebase.initializeApp(config);
+
+            var db = firebase.database();
+
+            $("#btnLogout").click(function () {
+
+                swal({
+                        title: "Are you sure you want to log out?",
+                        text: "You have to login again after this.",
+                        type: "info",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Yes",
+                        closeOnConfirm: false
+                    },
+                    function () {
+                        localStorage.removeItem("CustomerAccount");
+                        window.location = "index.html";
+                    });
+            });
+
+            $('#form_cc').card({
+                container: '.card-wrapper',
+
+                placeholders: {
+                    number: '**** **** **** ****',
+                    name: 'Muhammad Ali',
+                    expiry: '**/****',
+                    cvc: '***'
+                },
+
+                messages: {
+                    validDate: 'valid\ndate', // optional - default 'valid\nthru'
+                    monthYear: 'mm/yyyy', // optional - default 'month/year'
+                }
+
+            });
+
+            $("#btnTopup").click(function () {
+                var id = $("#custAccNoCC").val();
+
+                if (checkField() == true) {
+                    db.ref('/users/' + id).once("value", function (snapshot) {
+                        if (snapshot.val() !== null) {
+                            var userArr = snapshot.val();
+                            var datetime = new Date().getMilliseconds();
+                            var amount = Number($("#amount").val());
+                            db.ref('topup/' + datetime).set({
+                                number: $("#numberCC").val(),
+                                name: $("#nameCC").val(),
+                                expiry: $("#expiryCC").val(),
+                                cvc: $("#cvcCC").val(),
+                                custaccno: id,
+                                amount: amount
+                            }, function (error) {
+                                if (error) {
+                                    swal("Topup failed",
+                                        "Please check your internet connection.",
+                                        "error");
+                                } else {
+                                    $("#numberCC").val('');
+                                    $("#nameCC").val('');
+                                    $("#expiryCC").val('');
+                                    $("#cvcCC").val('');
+                                    $("#custAccNoCC").val('');
+                                    $("#amount").val('');
+                                    var balance = (Number(userArr.walbalance) + amount)
+                                        .toFixed(2);
+                                    swal({
+                                        title: "Your account have been topup.",
+                                        text: "Current balance is RM " +
+                                            balance,
+                                        type: "success",
+                                    }, function () {
+                                        db.ref().child('/users/' + id).update({
+                                            walbalance: balance
+                                        });
+                                    });
+                                }
+                            });
+                        } else {
+                            swal("Oops!",
+                                "Customer Account number does not exist.",
+                                "warning");
+                        }
+                    });
+                } else {
+                    swal("Wait a second.", "Please key in the field/s correctly below:\n\n" + errorText,
+                        "warning");
+                }
+            });
+
+        });
+
+        function checkField() {
+
+            var counter = 0;
+            var isCorrect = false;
+            errorText = '';
+
+            var previousWaterVolume = $('#numberCC').val().trim();
+            if (previousWaterVolume.length < 1) {
+                errorText += '• Number CC\n';
+                counter++;
+            }
+
+            var currWaterVolume = $('#nameCC').val().trim();
+            if (currWaterVolume.length < 1) {
+                errorText += '• Credit Card Name\n';
+                counter++;
+            }
+
+            var Year = $('#expiryCC').val().trim();
+            if (Year.length < 1) {
+                errorText += '• Expired Date & Year\n';
+                counter++;
+            }
+
+            var amount = $('#amount').val().trim();
+            if (amount.length < 1) {
+                errorText += '• Amount\n';
+                counter++;
+            } else {
+                if (/^\d+$/.test(amount) == false) {
+                    errorText += '• Amount format is not number\n';
+                    counter++;
+                }
+            }
+
+            if (counter == 0) {
+                isCorrect = true;
+            }
+
+            return isCorrect;
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>SADA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/sweetalert.css" rel="stylesheet">
+    <link href="css/nprogress.min.css" rel="stylesheet">
+    <link href="color/default.css" rel="stylesheet">
+    <link rel="shortcut icon" href="img/favicon.ico">
+</head>
+<style>
+    .down {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+    }
+
+    .navbar-inverse .navbar-inner {
+        padding: 0px;
+        background-image: linear-gradient(to bottom, #33B7FF, #33B7FF);
+        border-color: #3BB9FF;
+        ;
+        ;
+    }
+
+    footer {
+        background: #33B7FF;
+    }
+</style>
+
+<body>
+    <!-- navbar -->
+    <div class="navbar-wrapper">
+        <div class="navbar navbar-inverse navbar-fixed-top" style="margin-bottom: 5px !important;">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- Responsive navbar -->
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <h1 class="brand">
+                        <a href="Main.html">SADA</a>
+                    </h1>
+
+                    <!-- navigation -->
+                    <nav class="pull-right nav-collapse collapse">
+                        <ul id="Main" class="nav">
+                            <li>
+                                <a href="Main.html" title="Main">Main</a>
+                                <a id="btnLogout" title="logout">Logout</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Header area -->
+    <div class="container">
+        <header class="clearfix">
+            <div class="container">
+                <div class="">
+                    <div class="span6">
+                        <div class="accordion" id="accordionCustomerDetails" style=" margin-bottom: 10px; margin-top: 5px; ">
+                            <div class="accordion-group">
+                                <div class="accordion-heading">
+                                    <a class="accordion-toggle">
+                                        <i class="icon-plus"></i> Customer Details </a>
+                                </div>
+                                <div id="collapseOne" class="accordion-body" style="height: auto">
+                                    <div class="accordion-inner">
+                                        <label class="label-title">CustomerAccount:
+                                            <label class="label-text" id="CustomerAccount"></label>
+                                        </label>
+                                        <label class="label-title">CustomerName:
+                                            <label class="label-text" id="CustomerName"></label>
+                                        </label>
+                                        <label class="label-title">PhoneNumber:
+                                            <label class="label-text" id="PhoneNumber"></label>
+                                        </label>
+                                        <label class="label-title">CustomerEmail:
+                                            <label class="label-text" id="CustomerEmail"></label>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </div>
+    <footer class="down">
+        <div class="container">
+            <div class="span6 offset3">
+                <p class="copyright">
+                    &copy; SADA. All rights reserved.
+                </p>
+            </div>
+        </div>
+        <!-- ./container -->
+    </footer>
+
+
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/firebase.js"></script>
+    <script src="js/init-firebase.js"></script>
+    <script src="js/sweetalert.min.js"></script>
+    <script src="js/nprogress.min.js"></script>
+
+    <script>
+        var errorText = '';
+
+        $(document).ready(function () {
+
+            var CustomerAccount = localStorage.getItem("CustomerAccount");
+
+            var db = firebase.database();
+
+            if (CustomerAccount.length > 0) {
+                NProgress.start();
+                db.ref('/users/' + CustomerAccount).once("value", function (snapshot) {
+                    var userArr = snapshot.val();
+                    $("#CustomerAccount").text(userArr.CustomerAccount);
+                    $("#CustomerName").text(userArr.CustomerName);
+                    $("#PhoneNumber").text(userArr.PhoneNumber);
+                    $("#CustomerEmail").text(userArr.CustomerEmail);
+                    NProgress.done();
+
+                });
+            }
+
+            $("#btnLogout").click(function () {
+
+                swal({
+                        title: "Are you sure you want to log out?",
+                        text: "You have to login again after this.",
+                        type: "info",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Yes",
+                        closeOnConfirm: false
+                    },
+                    function () {
+                        localStorage.removeItem("CustomerAccount");
+                        window.location = "Main.html";
+                    });
+            });
+
+        });
+    </script>
+</body>
+
+</html>
