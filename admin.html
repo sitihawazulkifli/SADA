@@ -53,18 +53,6 @@
                     <nav class="pull-right nav-collapse collapse">
                         <ul id="menu-main" class="nav">
                             <li>
-                                <a title="works" href="currentwaterbills.html">Current Water Bills</a>
-                            </li>
-                            <li>
-                                <a title="contact" href="eaduan.html">E-Aduan</a>
-                            </li>
-                            <li>
-                                <a id="btnTopup" href="topup.html">Topup E-Wallet</a>
-                            </li>
-                            <li>
-                                <a id="btnReceipt" href="receipt.html">Receipt</a>
-                            </li>
-                            <li>
                                 <a id="btnLogout" title="logout">Logout</a>
                             </li>
                         </ul>
@@ -85,7 +73,7 @@
                             <div class="post-image">
                                 <img class="max-img" src="img/myaccount.jpg" alt="">
                             </div>
-                            <a href="customer_details.html">
+                            <a href="customer_details_admin.html">
                                 <div class="post-meta" style=" padding: 10px; ">
                                     <i class="icon-user icon-2x"></i>
                                     <span class="date">Customer Details</span>
@@ -97,70 +85,70 @@
                 </div>
             </div>
         </header>
-    </div>
-    <footer class="down">
-        <div class="container">
-            <div class="span6 offset3">
-                <p class="copyright">
-                    &copy; SADA. All rights reserved.
-                </p>
-            </div>
         </div>
-        <!-- ./container -->
-    </footer>
+        <footer class="down">
+            <div class="container">
+                <div class="span6 offset3">
+                    <p class="copyright">
+                        &copy; SADA. All rights reserved.
+                    </p>
+                </div>
+            </div>
+            <!-- ./container -->
+        </footer>
 
 
-    <script src="js/jquery.js"></script>
-    <script src="js/bootstrap.js"></script>
-    <script src="js/firebase.js"></script>
-    <script src="js/sweetalert.min.js"></script>
-    <script src="js/nprogress.min.js"></script>
+        <script src="js/jquery.js"></script>
+        <script src="js/bootstrap.js"></script>
+        <script src="js/firebase.js"></script>
+        <script src="js/sweetalert.min.js"></script>
+        <script src="js/nprogress.min.js"></script>
 
-    <script>
-        $(document).ready(function () {
+        <script>
+            $(document).ready(function () {
 
-            var config = {
-                apiKey: "AIzaSyBeKb0QWW6qoSa_sJz6Dbluldmrauhqda8",
-                authDomain: "sada-2d4af.firebaseapp.com",
-                databaseURL: "https://sada-2d4af.firebaseio.com"
-            };
+                var config = {
+                    apiKey: "AIzaSyBeKb0QWW6qoSa_sJz6Dbluldmrauhqda8",
+                    authDomain: "sada-2d4af.firebaseapp.com",
+                    databaseURL: "https://sada-2d4af.firebaseio.com"
+                };
 
-            firebase.initializeApp(config);
+                firebase.initializeApp(config);
 
-            var db = firebase.database();
-            var CustomerAccount = localStorage.getItem("CustomerAccount");
-            if (CustomerAccount.length > 0) {
-                NProgress.start();
-                db.ref('/users/' + CustomerAccount).once("value", function (snapshot) {
-                    var userArr = snapshot.val();
-                    var text =
-                        "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>";
-                    text = text + "Welcome " + userArr.CustomerName + "!";
-                    text = text + "</strong></div>";
-                    $("#rowLabel").html(text);
-                    NProgress.done();
-                });
-            }
-
-            $("#btnLogout").click(function () {
-
-                swal({
-                        title: "Are you sure you want to log out?",
-                        text: "You have to login again after this.",
-                        type: "info",
-                        showCancelButton: true,
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "Yes",
-                        closeOnConfirm: false
-                    },
-                    function () {
-                        localStorage.removeItem("CustomerAccount");
-                        window.location = "index.html";
+                var db = firebase.database();
+                var CustomerAccount = localStorage.getItem("CustomerAccount");
+                if (CustomerAccount.length > 0) {
+                    NProgress.start();
+                    db.ref('/users/' + CustomerAccount).once("value", function (snapshot) {
+                        var userArr = snapshot.val();
+                        var text =
+                            "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>";
+                        text = text + "Welcome " + userArr.CustomerName + "!";
+                        text = text + "</strong></div>";
+                        $("#rowLabel").html(text);
+                        NProgress.done();
                     });
-            });
+                }
 
-        });
-    </script>
+                $("#btnLogout").click(function () {
+
+                    swal({
+                            title: "Are you sure you want to log out?",
+                            text: "You have to login again after this.",
+                            type: "info",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Yes",
+                            closeOnConfirm: false
+                        },
+                        function () {
+                            localStorage.removeItem("CustomerAccount");
+                            window.location = "index.html";
+                        });
+                });
+
+            });
+        </script>
 </body>
 
 </html>

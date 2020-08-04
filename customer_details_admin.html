@@ -24,12 +24,14 @@
 
     .navbar-inverse .navbar-inner {
         padding: 0px;
-        background-image: linear-gradient(to bottom, #33BBFF, #33BBFF);
+        background-image: linear-gradient(to bottom, #33B7FF, #33B7FF);
         border-color: #3BB9FF;
+        ;
+        ;
     }
 
     footer {
-        background: #33AFFF;
+        background: #33B7FF;
     }
 </style>
 
@@ -46,25 +48,14 @@
                         <span class="icon-bar"></span>
                     </a>
                     <h1 class="brand">
-                        <a href="login.html">SADA</a>
+                        <a href="Main.html">SADA</a>
                     </h1>
 
                     <!-- navigation -->
                     <nav class="pull-right nav-collapse collapse">
-                        <ul id="menu-main" class="nav">
+                        <ul id="Main" class="nav">
                             <li>
-                                <a title="works" href="currentwaterbills.html">Current Water Bills</a>
-                            </li>
-                            <li>
-                                <a title="contact" href="eaduan.html">E-Aduan</a>
-                            </li>
-                            <li>
-                                <a id="btnTopup" href="topup.html">Topup E-Wallet</a>
-                            </li>
-                            <li>
-                                <a id="btnReceipt" href="receipt.html">Receipt</a>
-                            </li>
-                            <li>
+                                <a href="admin.html" title="Admin">Admin</a>
                                 <a id="btnLogout" title="logout">Logout</a>
                             </li>
                         </ul>
@@ -77,21 +68,14 @@
     <div class="container">
         <header class="clearfix">
             <div class="container">
-                <div class="" id="rowLabel" style="padding-top: 5px;">
-                </div>
-                <div class="row">
-                    <div class="span6" style="padding-bottom: 10px;padding-top: 10px;">
-                        <div class="home-post">
-                            <div class="post-image">
-                                <img class="max-img" src="img/myaccount.jpg" alt="">
-                            </div>
-                            <a href="customer_details.html">
-                                <div class="post-meta" style=" padding: 10px; ">
-                                    <i class="icon-user icon-2x"></i>
-                                    <span class="date">Customer Details</span>
-                                </div>
-                            </a>
+                <h4>Customer Details</h4>
 
+                <div class="span6">
+                    <div class="accordion" id="accordionCustomerDetails" style=" margin-bottom: 10px; margin-top: 5px; ">
+                        <div class="accordion-group">
+                            <div id="collapseOne" class="accordion-body" style="height: auto">
+
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -113,34 +97,39 @@
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.js"></script>
     <script src="js/firebase.js"></script>
+    <script src="js/init-firebase.js"></script>
     <script src="js/sweetalert.min.js"></script>
     <script src="js/nprogress.min.js"></script>
 
     <script>
+        var errorText = '';
+
         $(document).ready(function () {
 
-            var config = {
-                apiKey: "AIzaSyBeKb0QWW6qoSa_sJz6Dbluldmrauhqda8",
-                authDomain: "sada-2d4af.firebaseapp.com",
-                databaseURL: "https://sada-2d4af.firebaseio.com"
-            };
-
-            firebase.initializeApp(config);
-
             var db = firebase.database();
-            var CustomerAccount = localStorage.getItem("CustomerAccount");
-            if (CustomerAccount.length > 0) {
-                NProgress.start();
-                db.ref('/users/' + CustomerAccount).once("value", function (snapshot) {
-                    var userArr = snapshot.val();
-                    var text =
-                        "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>";
-                    text = text + "Welcome " + userArr.CustomerName + "!";
-                    text = text + "</strong></div>";
-                    $("#rowLabel").html(text);
-                    NProgress.done();
-                });
-            }
+
+            NProgress.start();
+            db.ref('/users').once("value", function (snapshot) {
+
+                var text = "";
+                var userArr = snapshotToArray(snapshot);
+
+                for (var i = 0; i < userArr.length; i++) {
+                    text += "<div class='accordion-inner'><label class='label-title'>Customer Account: <label class='label-text' id='CustomerAccount' style='font-weight: normal;'>";
+                    text += userArr[i].CustomerAccount;
+                    text += "</label></label></label><label class='label-title'>Phone Number: <label class='label-text' id='PhoneNumber' style='font-weight: normal;'>";
+                    text += userArr[i].PhoneNumber;
+                    text += "</label></label><label class='label-title'>Customer Email: <label class='label-text' id='CustomerEmail' style='font-weight: normal;'>";
+                    text += userArr[i].CustomerEmail;
+                    text += "</label></label></div><hr>";
+                }
+                text.slice(0, -4);
+
+                $("#collapseOne").html(text);
+
+                NProgress.done();
+
+            });
 
             $("#btnLogout").click(function () {
 
@@ -155,7 +144,7 @@
                     },
                     function () {
                         localStorage.removeItem("CustomerAccount");
-                        window.location = "index.html";
+                        window.location = "Main.html";
                     });
             });
 
